@@ -103,8 +103,8 @@ var pool = Stratum.createPool({
         {   //Main daemon instance
             "host": "127.0.0.1",
             "port": 19998,
-            "user": "beach",
-            "password": "surf"
+            "user": "stash",
+            "password": "local321"
         }//,
         // {   //Backup daemon instance
         //     "host": "127.0.0.1",
