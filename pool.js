@@ -14,12 +14,15 @@ var myCoin = {
      "peerMagicTestnet": "efa2faf7" //optional
 };
 
+var myAuxCoins = [];
+
 var Stratum = require('stratum-pool');
 
 var pool = Stratum.createPool({
 
     "coin": myCoin,
 
+    "auxes": myAuxCoins,
     "address": "yWQCTSkUst7ddYuebKsqa1kSoXEjpCkGKR", //Address to where block rewards are given
 
     /* Block rewards go to the configured pool wallet address to later be paid out to miners,
@@ -178,18 +181,31 @@ pool.on('share', function(isValidShare, isValidBlock, data){
   else if (data.blockHash)
       console.log('We thought a block was found but it was rejected by the daemon');
   else
-      console.log('Invalid share submitted')
+        console.log('Invalid share submitted');
 
-  console.log('share data: ' + JSON.stringify(data));
+    console.log('share data: ' + JSON.stringify(data));
+});
+
+/*
+    Called when a block, auxillery or primary, is found
+    coin: The symbol of the coin found. ex: 'LTC'
+    blockHash: The hash of the block found and confirmed (at least for now) is in the blockchain.
+*/
+pool.on('block', function(coin, height, blockHash, txHash) {
+    console.log('Mined block on ' + coin + ' network!');
+    console.log('HEIGHT: ' + height);
+    console.log('HASH: ' + blockHash);
+    console.log('TX: ' + txHash);
 });
 
 /*
 'severity': can be 'debug', 'warning', 'error'
 'logKey':   can be 'system' or 'client' indicating if the error
-          was caused by our system or a stratum client
+            was caused by our system or a stratum client
 */
+// Go ahead and combine these with your logs if you want :)
 pool.on('log', function(severity, logKey, logText){
-  console.log(severity + ': ' + '[' + logKey + '] ' + logText);
+    console.log(severity + ': ' + '[' + logKey + '] ' + logText);
 });
 
 pool.start();
